@@ -19,8 +19,10 @@ with your regions
 3. Init with multiple regions
 
 ```
-docker run -t -v /home/me/nominatimdata:/data nominatim sh /app/multiple_regions/init.sh
+docker run -t -v /Users/maxime/Desktop/Perso/nominatimdata:/data nominatim sh /app/multiple_regions/init.sh
 ```
+
+docker run -t -v /Users/maxime/Desktop/Perso/nominatimdata:/data ce4bea62f297 sh /app/multiple_regions/init.sh
 
 # Custom commands Multiple regions
 
@@ -41,7 +43,7 @@ with your regions
 2. Add multiple regions
 
 ```
-docker run -t -v /home/me/nominatimdata:/data nominatim sh /app/multiple_regions/add.sh
+docker run -t -v /Users/maxime/Desktop/Perso/nominatimdata:/data nominatim sh /app/multiple_regions/add.sh
 ```
 
 ## Update multiple regions
