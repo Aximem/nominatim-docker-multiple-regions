@@ -1,11 +1,14 @@
-OSMFILE=$1
-PGDIR=$2
-THREADS=$3
+PGDIR=postgresdata
+NOMDIR=nominatim
 
-rm -rf /data/$PGDIR && \
+rm -r /data/$PGDIR && \
 mkdir -p /data/$PGDIR && \
+rm -r /data/$NOMDIR && \
+mkdir -p /data/$NOMDIR/build && \
+mkdir -p /data/$NOMDIR/update && \
 
 chown postgres:postgres /data/$PGDIR && \
+chown -R postgres:postgres /data/$NOMDIR && \
 
 export  PGDATA=/data/$PGDIR  && \
 sudo -u postgres /usr/lib/postgresql/12/bin/initdb -D /data/$PGDIR && \
@@ -14,8 +17,8 @@ sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='nomin
 sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='www-data'" | grep -q 1 || sudo -u postgres createuser -SDR www-data && \
 sudo -u postgres psql postgres -c "DROP DATABASE IF EXISTS nominatim" && \
 useradd -m -p password1234 nominatim && \
-chown -R nominatim:nominatim ./src && \
-sudo -u nominatim ./src/build/utils/setup.php --osm-file $OSMFILE --all --threads $THREADS && \
+chown -R nominatim:nominatim ./src
+sudo -u nominatim sh ./src/build/utils/init_multiple_regions.sh && \
 sudo -u nominatim ./src/build/utils/check_import_finished.php && \
 sudo -u postgres /usr/lib/postgresql/12/bin/pg_ctl -D /data/$PGDIR stop && \
 sudo chown -R postgres:postgres /data/$PGDIR
