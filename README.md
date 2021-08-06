@@ -1,4 +1,4 @@
-[Nominatim Docker](https://github.com/mediagis/nominatim-docker) extension to manage Nominatim multiple regions container.
+[Nominatim Docker](https://github.com/mediagis/nominatim-docker) extension to manage Nominatim multiple regions.
 
 # Nominatim commands Multiple regions
 
@@ -53,7 +53,7 @@ Replace:
 COUNTRIES="europe/monaco europe/andorra"
 ```
 
-with your regions
+with your **NEW** regions. _Don't add the regions you already load from init script here_
 
 2. Add multiple regions
 
