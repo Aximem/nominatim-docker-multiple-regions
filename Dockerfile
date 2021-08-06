@@ -76,6 +76,11 @@ RUN true \
         --recursive \
         https://github.com/openstreetmap/Nominatim \
         src \
+    && mkdir nominatim \
+    && cd nominatim \
+    && mkdir build \
+    && mkdir update \
+    && cd .. \
     && cd src \
     && mkdir build \
     && cd build \
@@ -116,6 +121,8 @@ COPY conf.d/apache.conf /etc/apache2/sites-enabled/000-default.conf
 # Postgres config overrides to improve import performance (but reduce crash recovery safety)
 COPY conf.d/postgres-import.conf /etc/postgresql/12/main/conf.d/
 COPY conf.d/postgres-tuning.conf /etc/postgresql/12/main/conf.d/
+
+COPY src/start.sh /app/start.sh 
 
 # Multiple regions scripts
 COPY src/init.sh /app/multiple_regions/init.sh 
