@@ -1,14 +1,13 @@
 PGDIR=postgresdata
 NOMDIR=nominatim
 
-rm -r /data/$PGDIR && \
+rm -rf /data/$PGDIR && \
 mkdir -p /data/$PGDIR && \
-rm -r /data/$NOMDIR && \
-mkdir -p /data/$NOMDIR/build && \
-mkdir -p /data/$NOMDIR/update && \
+rm -rf /data/$NOMDIR && \
+mkdir -p /data/$NOMDIR && \
 
 chown postgres:postgres /data/$PGDIR && \
-chown -R postgres:postgres /data/$NOMDIR && \
+chown postgres:postgres /data/$NOMDIR && \
 
 export  PGDATA=/data/$PGDIR  && \
 sudo -u postgres /usr/lib/postgresql/12/bin/initdb -D /data/$PGDIR && \
@@ -19,6 +18,7 @@ sudo -u postgres psql postgres -c "DROP DATABASE IF EXISTS nominatim" && \
 useradd -m -p password1234 nominatim && \
 chown -R nominatim:nominatim ./src && \
 chown -R nominatim:nominatim ./nominatim && \
+chown -R nominatim:nominatim /data/$NOMDIR && \
 sudo -u nominatim sh ./src/build/utils/init_multiple_regions.sh && \
 sudo -u nominatim ./src/build/utils/check_import_finished.php && \
 sudo -u postgres /usr/lib/postgresql/12/bin/pg_ctl -D /data/$PGDIR stop && \

@@ -58,7 +58,7 @@ RUN true \
 
 # Configure postgres.
 RUN true \
-    && echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/12/main/pg_hba.conf \
+    && echo "host all all 0.0.0.0/0 trust" >> /etc/postgresql/12/main/pg_hba.conf \
     && echo "listen_addresses='*'" >> /etc/postgresql/12/main/postgresql.conf
 
 # Osmium install to run continuous updates.
@@ -88,7 +88,29 @@ RUN true \
     && make -j`nproc` \
     && chmod o=rwx .
 
-RUN curl https://www.nominatim.org/data/country_grid.sql.gz > /app/src/data/country_osm_grid.sql.gz
+# Apache configure.
+COPY conf.d/local.php /app/src/build/settings/local.php
+COPY conf.d/apache.conf /etc/apache2/sites-enabled/000-default.conf
+
+# Load initial data.
+ARG with_postcodes_gb
+ARG with_postcodes_us
+
+RUN if [ "$with_postcodes_gb" = "" ]; then \
+    echo "Skipping optional GB postcode file"; \
+    else \
+    echo "Downloading optional GB postcode file"; \
+    curl http://www.nominatim.org/data/gb_postcode_data.sql.gz > /app/src/data/gb_postcode_data.sql.gz; \
+    fi;
+
+RUN if [ "$with_postcodes_us" = "" ]; then \
+    echo "Skipping optional US postcode file"; \
+    else \
+    echo "Downloading optional US postcode file"; \
+    curl http://www.nominatim.org/data/us_postcode_data.sql.gz > /app/src/data/us_postcode_data.sql.gz; \
+    fi;
+
+RUN curl http://www.nominatim.org/data/country_grid.sql.gz > /app/src/data/country_osm_grid.sql.gz
 
 RUN true \
     # Remove development and unused packages.
@@ -112,17 +134,12 @@ RUN true \
         /var/tmp/* \
         /root/.cache \
         /app/src/.git \
-        /var/lib/apt/lists/*
+        /var/lib/apt/lists/* \
+        /var/lib/postgresql/12/main/*
 
-# Apache configuration
-COPY conf.d/local.php /app/src/build/settings/local.php
-COPY conf.d/apache.conf /etc/apache2/sites-enabled/000-default.conf
-
-# Postgres config overrides to improve import performance (but reduce crash recovery safety)
-COPY conf.d/postgres-import.conf /etc/postgresql/12/main/conf.d/
-COPY conf.d/postgres-tuning.conf /etc/postgresql/12/main/conf.d/
-
-COPY src/start.sh /app/start.sh 
+COPY src/start.sh /app/start.sh
+COPY src/startapache.sh /app/startapache.sh
+COPY src/startpostgres.sh /app/startpostgres.sh
 
 # Multiple regions scripts
 COPY src/init.sh /app/multiple_regions/init.sh 
@@ -141,10 +158,3 @@ WORKDIR /app
 
 EXPOSE 5432
 EXPOSE 8080
-
-# Please override this
-ENV NOMINATIM_PASSWORD qaIACxO6wMR3
-# how many threads should be use for importing
-ENV THREADS=16
-
-CMD /app/start.sh

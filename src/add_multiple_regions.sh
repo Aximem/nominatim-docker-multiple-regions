@@ -49,6 +49,7 @@ DOWNCOUNTRYPOSTFIX="-latest.osm.pbf"
 COMBINEFILES="osmium merge"
 
 mkdir -p ${UPDATEDIR}
+chown -R nominatim:nominatim ${UPDATEDIR}
 cd ${UPDATEDIR}
 rm -rf tmp
 mkdir -p tmp

@@ -32,11 +32,6 @@ COUNTRIES="europe/monaco europe/andorra"
 # SET TO YOUR NOMINATIM build FOLDER PATH:
 
 NOMINATIMBUILD="/data/nominatim/build"
-ls
-ls /app 
-ls /app/src
-ls /app/src/build
-ls /app/src/build/utils
 SETUPFILE="/app/src/build/utils/setup.php"
 UPDATEFILE="/app/src/build/utils/update.php"
 
@@ -55,6 +50,7 @@ DOWNCOUNTRYPOSTFIX="-latest.osm.pbf"
 COMBINEFILES="osmium merge"
 
 mkdir -p ${UPDATEDIR}
+chown -R nominatim:nominatim ${UPDATEDIR}
 cd ${UPDATEDIR}
 rm -rf tmp
 mkdir -p tmp
