@@ -27,7 +27,7 @@ touch2() { mkdir -p "$(dirname "$1")" && touch "$1" ; }
 # REPLACE WITH LIST OF YOUR "COUNTRIES":
 
 # COUNTRIES="europe/france/auvergne/haute_loire europe/france/auvergne/cantal"
-COUNTRIES="europe/monaco europe/andorra"
+COUNTRIES="europe/france"
 
 # SET TO YOUR NOMINATIM build FOLDER PATH:
 

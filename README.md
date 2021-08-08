@@ -57,7 +57,13 @@ COUNTRIES="europe/monaco europe/andorra"
 
 with your **NEW** regions. _Don't add the regions you already load from init script here_
 
-2. Add multiple regions
+2. Rebuild image
+
+```
+docker build --pull --rm -t nominatim .
+```
+
+3. Add multiple regions
 
 ```
 docker run -t -v /home/me/nominatimdata:/data nominatim sh /app/multiple_regions/add.sh
@@ -77,7 +83,13 @@ COUNTRIES="europe/monaco europe/andorra"
 
 with **ALL your regions**, the ones set into init script and the ones added with add script.
 
-2. Update multiple regions
+2. Rebuild image
+
+```
+docker build --pull --rm -t nominatim .
+```
+
+3. Update multiple regions
 
 ```
 docker run -t -v /home/me/nominatimdata:/data nominatim sh /app/multiple_regions/update.sh
