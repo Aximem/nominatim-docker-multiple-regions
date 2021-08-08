@@ -45,6 +45,8 @@ To perform specific search, checkout the [Nominatim documentation](https://nomin
 
 If you already set up the database with init script and want to add new regions, you can use **add script**
 
+**/!\ Stop the Nominatim container before launching add multiple regions script. `docker stop CONTAINER_ID`**
+
 1. Update file `multiple_regions/add_multiple_regions.sh`
 
 Replace:
